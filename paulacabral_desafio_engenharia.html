@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+
+        /*Nome: Paula Cabral
+          Universidade: FIAP 
+          Curso: Análise e Desenvolvimento de Sistemas
+          Semestre atual: 1° semestre */
+        
+        // Criei um array para os códigos de barra
+        var codigosDeBarra = ['288355555123888', '335333555584333', '223343555124001', '002111555874555', '111188555654777', '111333555123333',
+                            '432055555123888', '079333555584333', '155333555124001', '333188555584333', '555288555123001', '111388555123555', '288000555367333', 
+                            '066311555874001', '110333555123555', '333488555584333', '455448555123001', '022388555123555', '432044555845333', '034311555874001']
+      
+        // tranformei o array em objetos, seprando cada parte do código de barra
+        function tranformaCodigoEmObjeto(){
+            var codigoDeBarrasTranformado = []
+            for (string of codigosDeBarra){
+                const codigoSeparado = string.replace(/(\d{3})?(\d{3})?(\d{3})?(\d{3})?(\d{3})/, "$1 $2 $3 $4 $5")
+                const arrayDoCodigo = codigoSeparado.split(" ") 
+                const tranformaArrayEmObjeto = Object.assign({},arrayDoCodigo)
+                let chavesDoObjeto  = {
+                    origem: tranformaArrayEmObjeto['0'], 
+                    destino: tranformaArrayEmObjeto['1'], 
+                    loggi: tranformaArrayEmObjeto['2'],
+                    vendedor: tranformaArrayEmObjeto ['3'],
+                    tipo: tranformaArrayEmObjeto ['4'],
+                    codigo: string
+                };
+             codigoDeBarrasTranformado.push(chavesDoObjeto);
+                } 
+                return codigoDeBarrasTranformado
+        }
+        var  objetosCodigosDeBarra = tranformaCodigoEmObjeto();
+
+
+        // criei costantes com funções que verificam os códigos de barras válidos e inválidos
+        const tiposValidos = objetosCodigosDeBarra.filter(objetosCodigosDeBarra =>objetosCodigosDeBarra.tipo == 001 || objetosCodigosDeBarra.destino == 111 ||
+                                                            objetosCodigosDeBarra.tipo == 333 || objetosCodigosDeBarra.tipo == 555 || objetosCodigosDeBarra.tipo == 888)
+        
+        // Não consegui encontrar uma forma de descrever o intervalo de números com origem na região Centro-oeste, por isso usei o número direto do código.
+        const eliminarJoiasOrigemCentroOeste = tiposValidos.filter(tiposValidos => tiposValidos.tipo != 001 || tiposValidos.origem != 223)
+        
+        const pacotesPodemSerEnviados = eliminarJoiasOrigemCentroOeste.filter(eliminarJoiasOrigemCentroOeste => eliminarJoiasOrigemCentroOeste.vendedor != 367)
+       
+        const tiposInvalidos = objetosCodigosDeBarra.filter(objetosCodigosDeBarra =>objetosCodigosDeBarra.tipo != 001 && objetosCodigosDeBarra.destino != 111 &&
+                                                            objetosCodigosDeBarra.tipo != 333 && objetosCodigosDeBarra.tipo != 555 && objetosCodigosDeBarra.tipo != 888)
+       
+        const joiasOrigemCentroOeste = objetosCodigosDeBarra.filter(objetosCodigosDeBarra=> objetosCodigosDeBarra.tipo == 001 && objetosCodigosDeBarra.origem ==223)
+
+        const vendedorInvalido = objetosCodigosDeBarra.filter(objetosCodigosDeBarra => objetosCodigosDeBarra.vendedor == 367)
+        
+        var pacotesNaoPodemSerEnviados = []
+        var pacotesNaoPodemSerEnviados = pacotesNaoPodemSerEnviados.concat(tiposInvalidos).concat(joiasOrigemCentroOeste).concat(vendedorInvalido)
+
+       // Exercício 1 : Identificar a região de destino de cada pacote, com totalização de pacotes (soma região);
+       //Identifiquei o destino apenas dos pacotes que pessuiam códigos de barras válidos 
+
+       
+       var destinoSul = pacotesPodemSerEnviados.filter(pacotesPodemSerEnviados =>pacotesPodemSerEnviados.destino >=100 && pacotesPodemSerEnviados.destino < 200)
+       var destinoSedeste = pacotesPodemSerEnviados.filter(pacotesPodemSerEnviados =>pacotesPodemSerEnviados.destino >=001 && pacotesPodemSerEnviados.destino < 100)
+       var destinoCentroOeste = pacotesPodemSerEnviados.filter(pacotesPodemSerEnviados =>pacotesPodemSerEnviados.destino >=201 && pacotesPodemSerEnviados.destino < 300)
+       var destinoNordeste =pacotesPodemSerEnviados.filter(pacotesPodemSerEnviados =>pacotesPodemSerEnviados.destino >=300 && pacotesPodemSerEnviados.destino < 400)
+       var detinoNorte = pacotesPodemSerEnviados.filter(pacotesPodemSerEnviados =>pacotesPodemSerEnviados.destino >=400 && pacotesPodemSerEnviados.destino < 500)
+       
+        
+        console.log( 'Os pacotes ' + destinoSul[0].codigo + ', ' + destinoSul[1].codigo  + ', ' +
+            ' têm como destino a região Sul, totalizando ' + destinoSul.length + ' pacotes.')
+
+        console.log( 'Os pacotes ' + destinoSedeste[0].codigo + ', ' + destinoSedeste[1].codigo + ', '  +
+                     ' têm como destino a região Sudeste, totalizando ' + destinoSedeste.length + ' pacotes.')
+
+        console.log( 'Os pacotes ' +destinoCentroOeste[0].codigo + ', '  +
+                    ' têm como destino a região Centro-oeste, totalizando ' + destinoCentroOeste.length + ' pacotes.')
+
+        console.log( 'Os pacotes ' + destinoNordeste[0].codigo + ', ' + destinoNordeste[1].codigo + ', ' + destinoNordeste[2].codigo + ', ' +
+                        destinoNordeste[3].codigo + ', ' + destinoNordeste[4].codigo + ', ' + destinoNordeste[5].codigo + ', ' + destinoNordeste[6].codigo + ', ' +
+                        destinoNordeste[7].codigo + ', ' + destinoNordeste[8].codigo + ', ' + destinoNordeste[9].codigo  + ', ' +
+                    ' têm como destino a região Nordeste, totalizando ' + destinoNordeste.length + ' pacotes.')
+                        
+        console.log( 'Os pacotes ' + detinoNorte[0].codigo + ', ' + detinoNorte[1].codigo + ', ' +
+                     ' têm como destino a região Norte, totalizando ' + detinoNorte.length + ' pacotes.') 
+
+        
+        // Exercício 2:  Saber quais pacotes possuem códigos de barras válidos e/ou inválidos;
+
+       /console.log('Os ' + pacotesPodemSerEnviados[0].codigo + ', ' + pacotesPodemSerEnviados[0].codigo + ', ' + pacotesPodemSerEnviados[1].codigo + ', ' +
+        pacotesPodemSerEnviados[2].codigo + ', ' + pacotesPodemSerEnviados[3].codigo + ', ' + pacotesPodemSerEnviados[4].codigo + ', ' +
+        pacotesPodemSerEnviados[5].codigo + ', ' + pacotesPodemSerEnviados[6].codigo + ', ' + pacotesPodemSerEnviados[7].codigo + ', ' + 
+        pacotesPodemSerEnviados[8].codigo + ', ' +pacotesPodemSerEnviados[9].codigo + ', ' +pacotesPodemSerEnviados[10].codigo + ', ' +
+        pacotesPodemSerEnviados[11].codigo + ', ' +pacotesPodemSerEnviados[12].codigo + ', ' +pacotesPodemSerEnviados[13].codigo + ', ' +
+        pacotesPodemSerEnviados[14].codigo + ', ' + pacotesPodemSerEnviados[15].codigo + ', ' + pacotesPodemSerEnviados[16].codigo + ', ' +
+         ' possuem códigos de barras válidos, e os pacotes ' + pacotesNaoPodemSerEnviados[0].codigo + ', ' + pacotesNaoPodemSerEnviados[1].codigo + ', '
+         + pacotesNaoPodemSerEnviados[2].codigo + ', ' + ' possuem códigos de barras inválidos')
+
+         //Exercício 3: Identificar os pacotes que têm como origem a região Sul e Brinquedos em seu conteúdo;
+
+        var pacotesDoSul = pacotesPodemSerEnviados.filter(pacotesPodemSerEnviados => pacotesPodemSerEnviados.origem >=100 && pacotesPodemSerEnviados.origem <200)
+        var brinquedosDoSul = pacotesDoSul.filter(pacotesDoSul => pacotesDoSul.tipo == 888)
+
+        console.log (brinquedosDoSul)
+        console.log('Não há pacotes com origem no Sul que possuem brinquedos em seu conteúdo.')
+
+        //Exercício 4: Listar os pacotes agrupados por região de destino (Considere apenas pacotes válidos);
+        
+       var destinoSul = pacotesPodemSerEnviados.filter(pacotesPodemSerEnviados =>pacotesPodemSerEnviados.destino >=100 && pacotesPodemSerEnviados.destino < 200)
+       var destinoSedeste = pacotesPodemSerEnviados.filter(pacotesPodemSerEnviados =>pacotesPodemSerEnviados.destino >=001 && pacotesPodemSerEnviados.destino < 100)
+       var destinoCentroOeste = pacotesPodemSerEnviados.filter(pacotesPodemSerEnviados =>pacotesPodemSerEnviados.destino >=201 && pacotesPodemSerEnviados.destino < 300)
+       var destinoNordeste =pacotesPodemSerEnviados.filter(pacotesPodemSerEnviados =>pacotesPodemSerEnviados.destino >=300 && pacotesPodemSerEnviados.destino < 400)
+       var detinoNorte = pacotesPodemSerEnviados.filter(pacotesPodemSerEnviados =>pacotesPodemSerEnviados.destino >=400 && pacotesPodemSerEnviados.destino < 500)
+       
+       console.log( 'Os pacotes que têm como destino a região Sul são:  ' + destinoSul[0].codigo + ', ' + destinoSul[1].codigo)
+
+        console.log( 'Os pacotes que têm como destino a região Sudeste são:  ' + destinoSedeste[0].codigo + ', ' + destinoSedeste[1].codigo)
+
+        console.log( 'Os pacotes que têm como destino a região Centro-oeste são:  ' +destinoCentroOeste[0].codigo)
+
+        console.log( 'Os pacotes que têm como destino a região Nordeste são:  ' + destinoNordeste[0].codigo + ', ' + destinoNordeste[1].codigo + ', ' + destinoNordeste[2].codigo + ', ' +
+                        destinoNordeste[3].codigo + ', ' + destinoNordeste[4].codigo + ', ' + destinoNordeste[5].codigo + ', ' + destinoNordeste[6].codigo + ', ' +
+                        destinoNordeste[7].codigo + ', ' + destinoNordeste[8].codigo + ', ' + destinoNordeste[9].codigo)
+                        
+        console.log( 'Os pacotes que têm como destino a região Norte são:  ' + detinoNorte[0].codigo + ', ' + detinoNorte[1].codigo)
+       
+       
+       // Exercício 5: Listar o número de pacotes enviados por cada vendedor (Considere apenas pacotes válidos);
+
+       function agruparVendedores (array, prop) {
+            var valor = array.reduce(function(total, item) {
+            var chave = item[prop];
+            total[chave] = (total[chave] || []).concat(item);
+            return total;
+            }, {});
+            return valor;
+        };
+        var vendoresAgrupados = agruparVendedores(pacotesPodemSerEnviados, 'vendedor')
+        console.log(vendoresAgrupados)
+
+
+
+
+       // Exercíco 6: Gerar o relatório/lista de pacotes por destino e por tipo (Considere apenas pacotes válidos);
+
+      
+       var joaisSul = destinoSul.filter(destinoSul => destinoSul.tipo == 001)
+       var livrosSul = destinoSul.filter(destinoSul => destinoSul.tipo == 111)
+       var eletronicosSul= destinoSul.filter(destinoSul => destinoSul.tipo == 333)
+       var bebidasSul = destinoSul.filter(destinoSul => destinoSul.tipo == 555)
+       var brinquedosDoSul= destinoSul.filter(destinoSul => destinoSul.tipo == 888)
+      
+       var joaisSudeste = destinoSedeste.filter(destinoSedeste => destinoSedeste.tipo == 001)
+       var livrosSudeste = destinoSedeste.filter(destinoSedeste => destinoSedeste.tipo == 111)
+       var eletronicosSudeste= destinoSedeste.filter(destinoSedeste => destinoSedeste.tipo == 333)
+       var bebidasSudeste = destinoSedeste.filter(destinoSedeste => destinoSedeste.tipo == 555)
+       var brinquedosSudeste= destinoSedeste.filter(destinoSedeste => destinoSedeste.tipo == 888)
+      
+       var joaisCentroeste = destinoCentroOeste.filter(destinoCentroOeste => destinoCentroOeste.tipo == 001)
+       var livrosCentroeste = destinoCentroOeste.filter(destinoCentroOeste => destinoCentroOeste.tipo == 111)
+       var eletronicosCentroeste= destinoCentroOeste.filter(destinoCentroOeste => destinoCentroOeste.tipo == 333)
+       var bebidasCentroeste = destinoCentroOeste.filter(destinoSul => destinoSul.tipo == 555)
+       var brinquedosCentroeste= destinoCentroOeste.filter(destinoCentroOeste => destinoCentroOeste.tipo == 888)
+      
+       var joaisNordeste = destinoNordeste.filter(destinoNordeste => destinoNordeste.tipo == 001)
+       var livrosNordeste = destinoNordeste.filter(destinoNordeste => destinoNordeste.tipo == 111)
+       var eletronicosNordeste= destinoNordeste.filter(destinoNordeste => destinoNordeste.tipo == 333)
+       var bebidasNordeste = destinoNordeste.filter(destinoNordeste => destinoNordeste.tipo == 555)
+       var brinquedosNordeste= destinoNordeste.filter(destinoNordeste => destinoNordeste.tipo == 888)
+      
+       var joaisNorte = detinoNorte.filter(detinoNorte => detinoNorte.tipo == 001)
+       var livrosNorte = detinoNorte.filter(detinoNorte => detinoNorte.tipo == 111)
+       var eletronicosNorte= detinoNorte.filter(detinoNorte => detinoNorte.tipo == 333)
+       var bebidasNorte = detinoNorte.filter(detinoNorte => detinoNorte.tipo == 555)
+       var brinquedosNorte= detinoNorte.filter(detinoNorte => detinoNorte.tipo == 888)
+
+       console.group('Destino: Sul')
+       console.log(joaisSul)
+       console.log(livrosSul)
+       console.log(eletronicosSul)
+       console.log(bebidasSul)
+       console.log(brinquedosDoSul)
+       console.groupEnd()
+
+       console.group('Destino: Sudeste')
+       console.log(joaisSudeste)
+       console.log(livrosSudeste)
+       console.log(eletronicosSudeste)
+       console.log(bebidasSudeste)
+       console.log(brinquedosSudeste)
+       console.groupEnd()
+
+       console.group('Destino: Centro-oeste')
+       console.log(joaisCentroeste)
+       console.log(livrosCentroeste)
+       console.log(eletronicosCentroeste)
+       console.log(bebidasCentroeste)
+       console.log(brinquedosCentroeste)
+       console.groupEnd()
+
+       console.group('Destino: Nordeste')
+       console.log(joaisNordeste)
+       console.log(livrosNordeste)
+       console.log(eletronicosNordeste)
+       console.log(bebidasNordeste)
+       console.log(brinquedosNordeste)
+       console.groupEnd()
+
+       console.group('Destino: Norte')
+       console.log(joaisNorte)
+       console.log(livrosNorte)
+       console.log(eletronicosNorte)
+       console.log(bebidasNorte)
+       console.log(brinquedosNorte)
+       console.groupEnd()
+
+       console.log(joaisSul)
+       //Exercício 7: Se o transporte dos pacotes para o Norte passa pela Região Centro-Oeste, quais são os pacotes que devem ser despachados no mesmo caminhão?
+
+       var pacotesNoMesmoCaminhao = []
+       var pacotesNoMesmoCaminhao = pacotesNoMesmoCaminhao.concat(destinoCentroOeste).concat(detinoNorte)
+
+       console.log('Os pacotes ' + pacotesNoMesmoCaminhao[0].codigo  + ', ' + pacotesNoMesmoCaminhao[1].codigo + ', ' + pacotesNoMesmoCaminhao[2].codigo + ' devem ser despachados no mesmo caminhão.')
+            
+       // Exercício 8: Se todos os pacotes fossem uma fila qual seria a ordem de carga para o Norte no caminhão para descarregar os pacotes da Região Centro Oeste primeiro;
+       // Resposta:  Primeiro devem ser carregados os pacotes com destino à região Norte, e depois os pacotes com destino à região Cento-oestes.
+       
+        
+      /* Exercício 9: No item acima considerar que as jóias fossem sempre as primeiras a serem descarregadas;
+       Resposta: Primeiro deve ser carregados os itens que não são joias com destino à região Norte, em seguida as joias com destino á região norte, 
+       depois os itens que não são joias com destino á região Centro-oeste e, por ultimo, as joias com destino á região Centro-oeste.*/
+
+      //Exercíco 10: Listar os pacotes inválidos.
+      console.log(pacotesNaoPodemSerEnviados)
+      console.log('Os pacotes inválidos são: ' + pacotesNaoPodemSerEnviados[0].codigo + ', ' + pacotesNaoPodemSerEnviados[1].codigo + ', ' + pacotesNaoPodemSerEnviados[2].codigo + '.')
+  
+
+        
+
+    </script>
+</body>
+</html>
